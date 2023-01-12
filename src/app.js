@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import { MongoClient } from "mongodb";
+import dayjs from 'dayjs'
 
 dotenv.config();
 
@@ -27,10 +28,17 @@ try {
   console.log("Data base is not connected");
 }
 
+
 app.post("/participants", async (req, res) => {
   const { name } = req.body;
-  res.send(name);
 
+  const userExists = await db.collection("participants").findOne({ name })
+  
+  if (userExists) return res.status(409).send('User already exists')
+
+  var now = dayjs().format('HH:mm:ss')
+
+  
   try {
     await db.collection("participants").insertOne({
       name: name,
@@ -41,9 +49,12 @@ app.post("/participants", async (req, res) => {
       to: "Todos",
       text: "entra na sala...",
       type: "status",
-      time: "HH:MM:SS",
+      time: now
     });
-  } catch (err) {}
+    res.sendStatus(201);
+  } catch (err) {
+    res.sendStatus(422)
+  }
 });
 
 app.get("/participants", async (req, res) => {
@@ -55,11 +66,16 @@ app.get("/participants", async (req, res) => {
   }
 });
 
+app.post("/messages", (req, res) => {
+  console.log(req.headers.user)
+  res.send(req.body)
+})
+
 app.get("/messages", async (req, res) => {
-    try {
-      const messages = await db.collection("messages").find().toArray();
-      res.send(messages);
-    } catch (err) {
-      res.status(500).send("Internal Server Error");
-    }
-  });
+  try {
+    const messages = await db.collection("messages").find().toArray();
+    res.send(messages);
+  } catch (err) {
+    res.status(500).send("Internal Server Error");
+  }
+});
