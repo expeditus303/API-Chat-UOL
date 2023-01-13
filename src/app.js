@@ -66,11 +66,11 @@ app.get("/participants", async (req, res) => {
 
 app.post("/messages", async (req, res) => {
   const { user } = req.headers;
-  const { to, text, type } = req.body
-  console.log(to)
+  const { to, text, type } = req.body;
 
-  const userExists = await db.collection("participants").findOne({ name: user });
-  console.log(userExists)
+  const userExists = await db
+    .collection("participants")
+    .findOne({ name: user });
 
   if (!userExists) return res.sendStatus(422);
 
@@ -82,7 +82,7 @@ app.post("/messages", async (req, res) => {
       to,
       text,
       type,
-      time: now
+      time: now,
     });
   } catch (err) {}
 
@@ -90,15 +90,25 @@ app.post("/messages", async (req, res) => {
 });
 
 app.get("/messages", async (req, res) => {
-  
-  const limit = Number(req.query.limit) * -1
+  const user = req.headers.user;
+  console.log(user);
+
+  const limit = Number(req.query.limit) * -1;
 
   try {
-    const messages = await db.collection("messages").find().toArray();
+    const allMessages = await db.collection("messages").find().toArray();
+
+    const messages = allMessages.filter((a) => {
+      if (a.from === user || a.to === user || a.to === "Todos") {
+        return a;
+      }
+    });
+
     if (limit) {
-      const limitedMessages = messages.slice(limit)
-      return res.send(limitedMessages)
+      const limitedMessages = messages.slice(limit);
+      return res.send(limitedMessages);
     }
+    
     res.send(messages);
   } catch (err) {
     res.status(500).send("Internal Server Error");
