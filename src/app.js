@@ -120,15 +120,7 @@ app.post("/status", async (req, res) => {
   const user = req.headers.user
   console.log(user)
 
-  const userExists = await db.collection("participants").findOne({ name: user })
-
-  if (!userExists) return res.sendStatus(400)
-
-  try {
-
-  } catch(err) {
-    res.status(500).send("Internal Server Error");
-  }
+  await db.collection("participants").updateOne( {name: user}, {$set: {lastStatus: Date.now()}})
 
   res.send('ok')
 })
