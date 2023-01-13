@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import { MongoClient } from "mongodb";
-import dayjs from 'dayjs'
+import dayjs from "dayjs";
 
 dotenv.config();
 
@@ -28,17 +28,15 @@ try {
   console.log("Data base is not connected");
 }
 
-
 app.post("/participants", async (req, res) => {
   const { name } = req.body;
 
-  const userExists = await db.collection("participants").findOne({ name })
-  
-  if (userExists) return res.status(409).send('User already exists')
+  const userExists = await db.collection("participants").findOne({ name });
 
-  var now = dayjs().format('HH:mm:ss')
+  if (userExists) return res.status(409).send("User already exists");
 
-  
+  var now = dayjs().format("HH:mm:ss");
+
   try {
     await db.collection("participants").insertOne({
       name: name,
@@ -49,11 +47,11 @@ app.post("/participants", async (req, res) => {
       to: "Todos",
       text: "entra na sala...",
       type: "status",
-      time: now
+      time: now,
     });
     res.sendStatus(201);
   } catch (err) {
-    res.sendStatus(422)
+    res.sendStatus(422);
   }
 });
 
@@ -66,14 +64,41 @@ app.get("/participants", async (req, res) => {
   }
 });
 
-app.post("/messages", (req, res) => {
-  console.log(req.headers.user)
-  res.send(req.body)
-})
+app.post("/messages", async (req, res) => {
+  const { user } = req.headers;
+  const { to, text, type } = req.body
+  console.log(to)
+
+  const userExists = await db.collection("participants").findOne({ name: user });
+  console.log(userExists)
+
+  if (!userExists) return res.sendStatus(422);
+
+  var now = dayjs().format("HH:mm:ss");
+
+  try {
+    await db.collection("messages").insertOne({
+      from: user,
+      to,
+      text,
+      type,
+      time: now
+    });
+  } catch (err) {}
+
+  res.sendStatus(201);
+});
 
 app.get("/messages", async (req, res) => {
+  
+  const limit = Number(req.query.limit) * -1
+
   try {
     const messages = await db.collection("messages").find().toArray();
+    if (limit) {
+      const limitedMessages = messages.slice(limit)
+      return res.send(limitedMessages)
+    }
     res.send(messages);
   } catch (err) {
     res.status(500).send("Internal Server Error");
