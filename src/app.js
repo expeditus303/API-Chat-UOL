@@ -125,7 +125,7 @@ app.post("/status", async (req, res) => {
   if (!userExists) return res.sendStatus(400)
 
   try {
-    
+
   } catch(err) {
     res.status(500).send("Internal Server Error");
   }
