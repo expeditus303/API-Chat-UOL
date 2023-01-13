@@ -122,5 +122,5 @@ app.post("/status", async (req, res) => {
 
   await db.collection("participants").updateOne( {name: user}, {$set: {lastStatus: Date.now()}})
 
-  res.send('ok')
+  res.sendStatus(200)
 })
