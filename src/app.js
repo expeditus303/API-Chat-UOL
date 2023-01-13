@@ -126,7 +126,7 @@ app.get("/messages", async (req, res) => {
     });
 
     if (limit) {
-      const limitedMessages = messages.slice(limit);
+      const limitedMessages = messages.slice(limit).reverse()
       return res.send(limitedMessages);
     }
 
@@ -151,6 +151,6 @@ app.post("/status", async (req, res) => {
 
   } catch (err) {
     console.log(err)
-    res.status(500).send("Internal Server Error")
+    res.sendStatus(422)
   }
 });
