@@ -10,7 +10,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const PORT = process.env.PORT;
+// const PORT = process.env.PORT;
+const PORT = 5000
 const DATABASE_URL = process.env.DATABASE_URL;
 
 app.listen(PORT, () => {
