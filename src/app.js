@@ -30,10 +30,10 @@ try {
   console.log("Data base is not connected");
 }
 
-setInterval(async () => {
-  const idleParticipants = await db.collection("participants").find({ lastStatus: { $lt: new Date() - 10000 } }).toArray();
-  idleParticipants.map((idleParticipant) => removeParticipant(idleParticipant));
-}, 5000);
+// setInterval(async () => {
+//   const idleParticipants = await db.collection("participants").find({ lastStatus: { $lt: new Date() - 10000 } }).toArray();
+//   idleParticipants.map((idleParticipant) => removeParticipant(idleParticipant));
+// }, 5000);
 
 const removeParticipant = async (idleParticipant) => {
   let now = dayjs().format("HH:mm:ss");
@@ -64,8 +64,6 @@ app.get("/participants", async (req, res) => {
 app.get("/messages", async (req, res) => {
   const user = req.headers.user;
   const limit = req.query.limit
-
-
 
   try {
     const allMessages = await db.collection("messages").find().toArray();
@@ -182,8 +180,38 @@ app.post("/status", async (req, res) => {
   }
 });
 
-app.put("messages/:id", async (req, res) => {
-  
+app.put("/messages/:id", async (req, res) => {
+  const {id} = req.params
+  const {user} = req.headers
+  const { to, text, type } = req.body
+  console.log(text)
+
+  const messagesSchemas = joi.object({
+    to: joi.string().required(),
+    text: joi.string().required(),
+    type: joi.string().valid('message','private_message').required()
+  })
+
+  const validation = messagesSchemas.validate({to, text, type})
+
+  if(validation.error) return res.sendStatus(422)
+
+  try {
+    const idExists = await db.collection("messages").findOne({ _id: ObjectId(id) })
+
+    if (!idExists) return res.sendStatus(404)
+
+    if (idExists.from != user) return res.sendStatus(401)
+
+    await db.collection("messages").updateOne({ _id: ObjectId(id)}, {$set: {text}})
+
+    res.send("ok")
+  } catch (err) {
+
+    console.log(err)
+
+    return res.sendStatus(500)
+}
 })
 
 app.delete("/messages/:id", async (req, res) => {
