@@ -30,10 +30,10 @@ try {
   console.log("Data base is not connected");
 }
 
-setInterval(async () => {
-  const idleParticipants = await db.collection("participants").find({ lastStatus: { $lt: new Date() - 10000 } }).toArray();
-  idleParticipants.map((idleParticipant) => removeParticipant(idleParticipant));
-}, 5000);
+// setInterval(async () => {
+//   const idleParticipants = await db.collection("participants").find({ lastStatus: { $lt: new Date() - 10000 } }).toArray();
+//   idleParticipants.map((idleParticipant) => removeParticipant(idleParticipant));
+// }, 5000);
 
 const removeParticipant = async (idleParticipant) => {
   let now = dayjs().format("HH:mm:ss");
@@ -183,16 +183,22 @@ app.post("/status", async (req, res) => {
 
 app.delete("/messages/:id", async (req, res) => {
   const {id} = req.params
+  const {user} = req.headers
 
   try {
-    const idExists = await db.collection("messages").find({_id: ObjectId(id)})
+    const idExists = await db.collection("messages").findOne({_id: ObjectId(id)})
 
     if(!idExists) return res.sendStatus(404)
 
-    res.send('ok')
+    if (idExists.from != user) return res.sendStatus(401)
+
+
+    await db.collection("messages").deleteOne({_id: ObjectId(id)})
+
+    res.sendStatus(200)
 
   } catch(err) {
-    console.log(err)
+    res.send(err)
   }
 
   
