@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import { MongoClient, ObjectId  } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 import dayjs from "dayjs";
 
 dotenv.config();
@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 // const PORT = process.env.PORT;
-const PORT = 5000
+const PORT = 5000;
 const DATABASE_URL = process.env.DATABASE_URL;
 
 app.listen(PORT, () => {
@@ -29,36 +29,38 @@ try {
   console.log("Data base is not connected");
 }
 
-let i = 0
 setInterval(async () => {
-  const idleParticipants = await db.collection("participants").find({lastStatus:{$lt:new Date()-10000}}).toArray();
-  idleParticipants.map(idleParticipant => removeParticipant(idleParticipant))
+  const idleParticipants = await db.collection("participants").find({ lastStatus: { $lt: new Date() - 10000 } }).toArray();
+  idleParticipants.map((idleParticipant) => removeParticipant(idleParticipant));
 }, 5000);
 
 const removeParticipant = async (idleParticipant) => {
-  
   let now = dayjs().format("HH:mm:ss");
 
-  const removeMessage = {from: idleParticipant.name, to: 'Todos', text: 'sai da sala...', type: 'status', time: now}
+  const removeMessage = {
+    from: idleParticipant.name,
+    to: "Todos",
+    text: "sai da sala...",
+    type: "status",
+    time: now,
+  };
 
   try {
-    await db.collection("participants").deleteOne({_id: idleParticipant._id})
-    await db.collection("messages").insertOne(removeMessage)
-  } catch(err) {
-
-  }
-}
+    await db.collection("participants").deleteOne({ _id: idleParticipant._id });
+    await db.collection("messages").insertOne(removeMessage);
+  } catch (err) {}
+};
 
 app.post("/participants", async (req, res) => {
   const { name } = req.body;
 
-  const userExists = await db.collection("participants").findOne({ name });
-
-  if (userExists) return res.status(409).send("User already exists");
-
-  let now = dayjs().format("HH:mm:ss");
-
+  
   try {
+    const userExists = await db.collection("participants").findOne({ name });
+  
+    if (userExists) return res.status(409).send("User already exists");
+  
+    let now = dayjs().format("HH:mm:ss");
     await db.collection("participants").insertOne({
       name: name,
       lastStatus: Date.now(),
@@ -126,7 +128,7 @@ app.get("/messages", async (req, res) => {
     });
 
     if (limit) {
-      const limitedMessages = messages.slice(limit).reverse()
+      const limitedMessages = messages.slice(limit).reverse();
       return res.send(limitedMessages);
     }
 
@@ -138,19 +140,22 @@ app.get("/messages", async (req, res) => {
 
 app.post("/status", async (req, res) => {
   const user = req.headers.user;
-  console.log(user)
+  console.log(user);
 
   try {
-    const userExists = await db.collection("participants").findOne({ name: user });
-    
-    if (!userExists) return res.sendStatus(400);
-    
-    await db.collection("participants").updateOne( {name: user}, {$set: {lastStatus: Date.now()}})
-    
-    return res.sendStatus(200)
+    const userExists = await db
+      .collection("participants")
+      .findOne({ name: user });
 
+    if (!userExists) return res.sendStatus(404);
+
+    await db
+      .collection("participants")
+      .updateOne({ name: user }, { $set: { lastStatus: Date.now() } });
+
+    return res.sendStatus(200);
   } catch (err) {
-    console.log(err)
-    res.sendStatus(422)
+    console.log(err);
+    res.sendStatus(422);
   }
 });
