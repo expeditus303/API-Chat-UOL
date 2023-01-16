@@ -30,10 +30,10 @@ try {
   console.log("Data base is not connected");
 }
 
-setInterval(async () => {
-  const idleParticipants = await db.collection("participants").find({ lastStatus: { $lt: new Date() - 10000 } }).toArray();
-  idleParticipants.map((idleParticipant) => removeParticipant(idleParticipant));
-}, 5000);
+// setInterval(async () => {
+//   const idleParticipants = await db.collection("participants").find({ lastStatus: { $lt: new Date() - 10000 } }).toArray();
+//   idleParticipants.map((idleParticipant) => removeParticipant(idleParticipant));
+// }, 5000);
 
 const removeParticipant = async (idleParticipant) => {
   let now = dayjs().format("HH:mm:ss");
@@ -63,15 +63,9 @@ app.get("/participants", async (req, res) => {
 
 app.get("/messages", async (req, res) => {
   const user = req.headers.user;
-  console.log(user);
+  const limit = req.query.limit
 
-  console.log('AQUI')
-  console.log(req.query.limit)
-  console.log(typeof(req.query.limit))
 
-  if (typeof(req.query.limit) != "number" || req.query.limit <= 0) return res.sendStatus(422)
-
-  const limit = Number(req.query.limit) * -1;
 
   try {
     const allMessages = await db.collection("messages").find().toArray();
@@ -83,7 +77,10 @@ app.get("/messages", async (req, res) => {
     });
 
     if (limit) {
-      const limitedMessages = messages.slice(limit).reverse();
+      if (typeof(limit) != "number" || Number(limit) <= 0) {
+        return res.sendStatus(422)
+      }
+      const limitedMessages = messages.slice(Number(limit) * -1).reverse();
       return res.send(limitedMessages);
     }
 
@@ -186,7 +183,7 @@ app.post("/status", async (req, res) => {
 });
 
 app.put("messages/:id", async (req, res) => {
-
+  
 })
 
 app.delete("/messages/:id", async (req, res) => {
