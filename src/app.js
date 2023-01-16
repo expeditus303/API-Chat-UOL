@@ -63,7 +63,7 @@ app.get("/participants", async (req, res) => {
 
 app.get("/messages", async (req, res) => {
   const user = req.headers.user;
-  const limit = Number(req.query.limit)
+  const limit = req.query.limit
 
   try {
     const allMessages = await db.collection("messages").find().toArray();
