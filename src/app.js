@@ -2,7 +2,7 @@ import cors from "cors";
 import dayjs from "dayjs";
 import dotenv from "dotenv";
 import express from "express";
-import joi from 'joi'
+import joi, { number } from 'joi'
 import { MongoClient, ObjectId } from "mongodb";
 
 dotenv.config();
@@ -135,6 +135,8 @@ app.get("/messages", async (req, res) => {
   const user = req.headers.user;
   console.log(user);
 
+  if (req.query.limit != number && req.query.limit <= 0) return res.sendStatus(422)
+  
   const limit = Number(req.query.limit) * -1;
 
   try {
