@@ -30,10 +30,10 @@ try {
   console.log("Data base is not connected");
 }
 
-// setInterval(async () => {
-//   const idleParticipants = await db.collection("participants").find({ lastStatus: { $lt: new Date() - 10000 } }).toArray();
-//   idleParticipants.map((idleParticipant) => removeParticipant(idleParticipant));
-// }, 5000);
+setInterval(async () => {
+  const idleParticipants = await db.collection("participants").find({ lastStatus: { $lt: new Date() - 10000 } }).toArray();
+  idleParticipants.map((idleParticipant) => removeParticipant(idleParticipant));
+}, 5000);
 
 const removeParticipant = async (idleParticipant) => {
   let now = dayjs().format("HH:mm:ss");
