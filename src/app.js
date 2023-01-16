@@ -30,10 +30,10 @@ try {
   console.log("Data base is not connected");
 }
 
-// setInterval(async () => {
-//   const idleParticipants = await db.collection("participants").find({ lastStatus: { $lt: new Date() - 10000 } }).toArray();
-//   idleParticipants.map((idleParticipant) => removeParticipant(idleParticipant));
-// }, 5000);
+setInterval(async () => {
+  const idleParticipants = await db.collection("participants").find({ lastStatus: { $lt: new Date() - 10000 } }).toArray();
+  idleParticipants.map((idleParticipant) => removeParticipant(idleParticipant));
+}, 5000);
 
 const removeParticipant = async (idleParticipant) => {
   let now = dayjs().format("HH:mm:ss");
@@ -51,6 +51,47 @@ const removeParticipant = async (idleParticipant) => {
     await db.collection("messages").insertOne(removeMessage);
   } catch (err) {}
 };
+
+app.get("/participants", async (req, res) => {
+  try {
+    const participants = await db.collection("participants").find().toArray();
+    res.send(participants);
+  } catch (err) {
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get("/messages", async (req, res) => {
+  const user = req.headers.user;
+  console.log(user);
+
+  console.log('AQUI')
+  console.log(req.query.limit)
+  console.log(typeof(req.query.limit))
+
+  if (typeof(req.query.limit) != "number" || req.query.limit <= 0) return res.sendStatus(422)
+
+  const limit = Number(req.query.limit) * -1;
+
+  try {
+    const allMessages = await db.collection("messages").find().toArray();
+
+    const messages = allMessages.filter((a) => {
+      if (a.from === user || a.to === user || a.to === "Todos") {
+        return a;
+      }
+    });
+
+    if (limit) {
+      const limitedMessages = messages.slice(limit).reverse();
+      return res.send(limitedMessages);
+    }
+
+    res.send(messages);
+  } catch (err) {
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 app.post("/participants", async (req, res) => {
   const { name } = req.body;
@@ -84,15 +125,6 @@ app.post("/participants", async (req, res) => {
     res.sendStatus(201);
   } catch (err) {
     res.sendStatus(422);
-  }
-});
-
-app.get("/participants", async (req, res) => {
-  try {
-    const participants = await db.collection("participants").find().toArray();
-    res.send(participants);
-  } catch (err) {
-    res.status(500).send("Internal Server Error");
   }
 });
 
@@ -131,34 +163,6 @@ app.post("/messages", async (req, res) => {
   res.sendStatus(201);
 });
 
-app.get("/messages", async (req, res) => {
-  const user = req.headers.user;
-  console.log(user);
-
-  if (typeof req.query.limit != "number" && req.query.limit <= 0) return res.sendStatus(422)
-
-  const limit = Number(req.query.limit) * -1;
-
-  try {
-    const allMessages = await db.collection("messages").find().toArray();
-
-    const messages = allMessages.filter((a) => {
-      if (a.from === user || a.to === user || a.to === "Todos") {
-        return a;
-      }
-    });
-
-    if (limit) {
-      const limitedMessages = messages.slice(limit).reverse();
-      return res.send(limitedMessages);
-    }
-
-    res.send(messages);
-  } catch (err) {
-    res.status(500).send("Internal Server Error");
-  }
-});
-
 app.post("/status", async (req, res) => {
   const user = req.headers.user;
   console.log(user);
@@ -181,6 +185,10 @@ app.post("/status", async (req, res) => {
   }
 });
 
+app.put("messages/:id", async (req, res) => {
+
+})
+
 app.delete("/messages/:id", async (req, res) => {
   const {id} = req.params
   const {user} = req.headers
@@ -191,7 +199,6 @@ app.delete("/messages/:id", async (req, res) => {
     if(!idExists) return res.sendStatus(404)
 
     if (idExists.from != user) return res.sendStatus(401)
-
 
     await db.collection("messages").deleteOne({_id: ObjectId(id)})
 
