@@ -2,7 +2,7 @@ import cors from "cors";
 import dayjs from "dayjs";
 import dotenv from "dotenv";
 import express from "express";
-import joi, { number } from 'joi'
+import joi from 'joi'
 import { MongoClient, ObjectId } from "mongodb";
 
 dotenv.config();
@@ -135,8 +135,8 @@ app.get("/messages", async (req, res) => {
   const user = req.headers.user;
   console.log(user);
 
-  if (req.query.limit != number && req.query.limit <= 0) return res.sendStatus(422)
-  
+  if (typeof req.query.limit != "number" && req.query.limit <= 0) return res.sendStatus(422)
+
   const limit = Number(req.query.limit) * -1;
 
   try {
@@ -180,3 +180,20 @@ app.post("/status", async (req, res) => {
     res.sendStatus(422);
   }
 });
+
+app.delete("/messages/:id", async (req, res) => {
+  const {id} = req.params
+
+  try {
+    const idExists = await db.collection("messages").find({_id: ObjectId(id)})
+
+    if(!idExists) return res.sendStatus(404)
+
+    res.send('ok')
+
+  } catch(err) {
+    console.log(err)
+  }
+
+  
+})
