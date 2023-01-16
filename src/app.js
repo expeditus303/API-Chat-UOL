@@ -1,8 +1,9 @@
-import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
-import { MongoClient, ObjectId } from "mongodb";
 import dayjs from "dayjs";
+import dotenv from "dotenv";
+import express from "express";
+import joi from 'joi'
+import { MongoClient, ObjectId } from "mongodb";
 
 dotenv.config();
 
@@ -53,7 +54,15 @@ const removeParticipant = async (idleParticipant) => {
 
 app.post("/participants", async (req, res) => {
   const { name } = req.body;
+  console.log({name})
 
+  const participantsSchema = joi.object({
+    name: joi.string().required()
+  })
+
+  const validation = participantsSchema.validate({name})
+
+  if(validation.error) return res.sendStatus(422)
   
   try {
     const userExists = await db.collection("participants").findOne({ name });
@@ -90,6 +99,16 @@ app.get("/participants", async (req, res) => {
 app.post("/messages", async (req, res) => {
   const { user } = req.headers;
   const { to, text, type } = req.body;
+
+  const messagesSchemas = joi.object({
+    to: joi.string().required(),
+    text: joi.string().required(),
+    type: joi.string().valid('message','private_message').required()
+  })
+
+  const validation = messagesSchemas.validate({to, text, type})
+
+  if(validation.error) return res.sendStatus(422)
 
   const userExists = await db
     .collection("participants")
