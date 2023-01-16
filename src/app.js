@@ -63,7 +63,7 @@ app.get("/participants", async (req, res) => {
 
 app.get("/messages", async (req, res) => {
   const user = req.headers.user;
-  const limit = req.query.limit
+  const limit = Number(req.query.limit)
 
   try {
     const allMessages = await db.collection("messages").find().toArray();
@@ -75,15 +75,15 @@ app.get("/messages", async (req, res) => {
     });
 
     if (limit) {
-      if (typeof(limit) != "number" || Number(limit) <= 0) {
-        return res.sendStatus(422)
-      }
+      if (limit < 1 || isNaN(limit)) return res.sendStatus(422)
+
       const limitedMessages = messages.slice(Number(limit) * -1).reverse();
       return res.send(limitedMessages);
     }
 
     res.send(messages);
   } catch (err) {
+    console.log(err)
     res.status(500).send("Internal Server Error");
   }
 });
