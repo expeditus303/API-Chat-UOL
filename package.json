@@ -1,0 +1,33 @@
+{
+  "name": "api-chat-uol",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "This is a back-end project that creates an API for a chat using MongoDB and Node.js. The project aims to provide a simple and easy-to-use interface for developers who want to implement a chat feature in their applications.",
+  "main": "./src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./src/app.js",
+    "dev": "nodemon ./src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/expeditus303/API-Chat-UOL.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/expeditus303/API-Chat-UOL/issues"
+  },
+  "homepage": "https://github.com/expeditus303/API-Chat-UOL#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "joi": "^17.9.1",
+    "mongodb": "^5.2.0"
+  }
+}
