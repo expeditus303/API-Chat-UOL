@@ -4,8 +4,9 @@ function findByName({ name }) {
   return db.participantsCollection.findOne({ name });
 }
 
-function create({ name, lastStatus}) {
-    return db.participantsCollection.insertOne({ name , lastStatus})
+function create(participant, message) {
+    db.participantsCollection.insertOne(participant)
+    db.messagesCollection.insertOne(message)
 }
 
 function getAll() {

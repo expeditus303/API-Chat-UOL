@@ -1,15 +1,6 @@
 import db from "../config/database.connection.js";
 
-function create({name, formattedTime}){
-
-    const message = {
-        from: name,
-        to: "Todos",
-        text: 'entra na sala...',
-        type: 'status',
-        time: formattedTime
-    }
-
+function create(message){
     return db.messagesCollection.insertOne(message)
 }
 

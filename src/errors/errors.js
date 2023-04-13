@@ -1,10 +1,18 @@
-function conflictError(message = "Conflict") {
+function conflict(message = "Conflict") {
   return {
     name: "ConflictError",
     message,
   };
 }
 
-export default {
-    conflictError
+function unprocessableContent(message = "Unprocessable Content") {
+  return {
+    name: "UnprocessableContentError",
+    message,
+  };
 }
+
+export default {
+  conflict,
+  unprocessableContent,
+};

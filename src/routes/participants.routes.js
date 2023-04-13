@@ -1,11 +1,11 @@
 import { Router } from "express";
 import schemaValidationMiddleware from "../middlewares/schemaValidation.middleware.js";
-import participantSchema from "../schemas/schemas.js"
-import participantsController from "../controllers/participants.controllers.js"
+import schema from "../schemas/schemas.js"
+import participantsControllers from "../controllers/participants.controllers.js"
 
 const participantsRoutes = Router()
 
-participantsRoutes.post("/participants", schemaValidationMiddleware(participantSchema), participantsController.create)
-participantsRoutes.get("/participants", participantsController.get)
+participantsRoutes.post("/participants", schemaValidationMiddleware(schema.participant), participantsControllers.create)
+participantsRoutes.get("/participants", participantsControllers.get)
 
 export default participantsRoutes

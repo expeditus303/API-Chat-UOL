@@ -1,22 +1,30 @@
-import partipantsRepositories from "../repositories/participants.repositories.js";
+import participantsRepositories from "../repositories/participants.repositories.js";
 import messagesRepositores from "../repositories/messages.repositories.js"
 import errors from "../errors/errors.js"
 import dayjs from "dayjs";
 
 
 async function create({ name }) {
-    const participantExists = await partipantsRepositories.findByName({ name }) // sertá que nao precisa deletar o {}? 
+    const participantExists = await participantsRepositories.findByName({ name })
 
     if (participantExists) {
-        throw errors.conflictError("The name provided is already registered. Please choose a different name.")
+        throw errors.conflict("The name provided is already registered. Please choose a different name.")
     }
     const lastStatus = Date.now()
     const formattedTime = dayjs(lastStatus).format("HH:mm:ss")
 
-    await partipantsRepositories.create({ name, lastStatus})
-    await messagesRepositores.create({name, formattedTime})
+    const participant = { name, lastStatus}
 
-    return
+    const message = {
+        from: name,
+        to: "Todos",
+        text: 'entra na sala...',
+        type: 'status',
+        time: formattedTime
+    }
+
+    return await partipantsRepositories.create(participant, message)
+
 }
 
 async function getAll(){
