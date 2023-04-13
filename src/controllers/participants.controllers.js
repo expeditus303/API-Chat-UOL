@@ -1,14 +1,18 @@
 import participantsServices from "../services/participants.services.js"
 
-export async function createParticipant(req, res){
+async function create(req, res, next){
     const { name } = req.body
 
     try {
-        participantsServices.create({name})
+        await participantsServices.create({name})
 
-        res.status(200).send("jijijiji")
+        return res.sendStatus(201)
     } catch (err) {
-        res.send(err)
+        next(err)
     }
+}
+
+export default {
+    create
 }
 

@@ -4,11 +4,11 @@ function findByName({ name }) {
   return db.participantsCollection.findOne({ name });
 }
 
-function insertNew({ name }, date) {
-    return db.participantsCollection.insertOne({ name , lastStatus: date})
+function create({ name, lastStatus}) {
+    return db.participantsCollection.insertOne({ name , lastStatus})
 }
 
 export default {
     findByName,
-    insertNew
+    create
 }
