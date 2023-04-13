@@ -15,8 +15,15 @@ async function create({ name }) {
 
     await partipantsRepositories.create({ name, lastStatus})
     await messagesRepositores.create({name, formattedTime})
+
+    return
+}
+
+async function getAll(){
+    return partipantsRepositories.getAll()
 }
 
 export default { 
-    create
+    create,
+    getAll
 }

@@ -12,7 +12,18 @@ async function create(req, res, next){
     }
 }
 
+async function get(req, res, next) {
+    try {
+        const participantsList = await participantsServices.getAll()
+
+        return res.status(200).send(participantsList)
+    } catch (err) {
+        next(err)
+    }
+}
+
 export default {
-    create
+    create,
+    get
 }
 

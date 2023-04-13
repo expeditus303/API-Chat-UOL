@@ -6,5 +6,6 @@ import participantsController from "../controllers/participants.controllers.js"
 const participantsRoutes = Router()
 
 participantsRoutes.post("/participants", schemaValidationMiddleware(participantSchema), participantsController.create)
+participantsRoutes.get("/participants", participantsController.get)
 
 export default participantsRoutes

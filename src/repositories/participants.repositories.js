@@ -8,7 +8,12 @@ function create({ name, lastStatus}) {
     return db.participantsCollection.insertOne({ name , lastStatus})
 }
 
+function getAll() {
+  return db.participantsCollection.find().toArray()
+}
+
 export default {
     findByName,
-    create
+    create,
+    getAll
 }
