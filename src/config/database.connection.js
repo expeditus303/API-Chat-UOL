@@ -10,7 +10,7 @@ try {
   console.log(err);
 }
 
-const db = mongoClient.db;
+const db = mongoClient.db();
 const participantsCollection = db.collection("participants");
 const messagesCollection = db.collection("messages");
 
