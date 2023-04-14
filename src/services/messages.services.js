@@ -7,9 +7,7 @@ async function create({user, to, text, type}){
 
     const participantExists = await participantsRepositories.findByName({ name: user })
 
-    if (!participantExists) {
-        throw errors.unprocessableContent("You are not a participant")
-    }
+    if (!participantExists) throw errors.unprocessableContent("You are not a participant")
 
     const currentTime = dayjs(Date.now()).format("HH:mm:ss")
 

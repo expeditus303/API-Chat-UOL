@@ -12,7 +12,15 @@ function unprocessableContent(message = "Unprocessable Content") {
   };
 }
 
+function notFound(message = "Not Found") {
+  return {
+    name: "NotFoundError",
+    message
+  }
+}
+
 export default {
   conflict,
   unprocessableContent,
+  notFound
 };

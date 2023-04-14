@@ -1,21 +1,29 @@
 import httpStatus from "http-status";
 
 function handleAppErrors(err, _req, res, _next) {
-    let statusCode
+  let statusCode;
 
-    switch (err.name) {
-        case "ConflictError":
-            statusCode = httpStatus.CONFLICT
-            break;
-    
-        default:
-            statusCode = httpStatus.INTERNAL_SERVER_ERROR
-            break;
-    }
+  switch (err.name) {
+    case "ConflictError":
+      statusCode = httpStatus.CONFLICT;
+      break;
 
-    let message = {message: err.message || "Internal Server Error"}
+    case "UnprocessableContentError":
+      statusCode = httpStatus.UNPROCESSABLE_ENTITY;
+      break;
 
-    return res.status(statusCode).send(message)
+    case "NotFoundError":
+      statusCode = httpStatus.NOT_FOUND;
+      break;
+
+    default:
+      statusCode = httpStatus.INTERNAL_SERVER_ERROR;
+      break;
+  }
+
+  let message = { message: err.message || "Internal Server Error" };
+
+  return res.status(statusCode).send(message);
 }
 
-export default handleAppErrors
+export default handleAppErrors;

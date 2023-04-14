@@ -1,5 +1,4 @@
 import participantsRepositories from "../repositories/participants.repositories.js";
-import messagesRepositores from "../repositories/messages.repositories.js"
 import errors from "../errors/errors.js"
 import dayjs from "dayjs";
 
@@ -23,12 +22,12 @@ async function create({ name }) {
         time: formattedTime
     }
 
-    return await partipantsRepositories.create(participant, message)
+    return await participantsRepositories.create(participant, message)
 
 }
 
 async function getAll(){
-    return partipantsRepositories.getAll()
+    return participantsRepositories.getAll()
 }
 
 export default { 
