@@ -1,6 +1,6 @@
 import statusServices from "../services/status.services.js"
 
-async function update(req, res){
+async function update(req, res, next){
     const { user } = req.headers
 
     try {
@@ -8,7 +8,7 @@ async function update(req, res){
 
         res.sendStatus(200)
     } catch (err) {
-        
+        next(err)
     }
 }
 
