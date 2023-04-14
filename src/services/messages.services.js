@@ -24,4 +24,10 @@ async function create({user, to, text, type}){
     await messagesRepositories.create(message)
 }
 
+async function get(user, limit) {
+    
+    const userMessages = await messagesRepositories.get(user)
+    /// stoped here
+}
+
 export default { create }
