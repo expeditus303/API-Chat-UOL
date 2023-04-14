@@ -24,6 +24,7 @@ async function create({user, to, text, type}){
 
 async function get(user, limit) {
 
+
     if(limit) return (await (messagesRepositories.getLimit(user, limit))).reverse()
     
     return await messagesRepositories.get(user)

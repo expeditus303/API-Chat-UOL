@@ -21,7 +21,9 @@ async function get(req, res, next) {
     const messages = await messagesServices.get(user, limit);
 
     return res.status(200).send(messages);
-  } catch (err) {}
+  } catch (err) {
+    next(err)
+  }
 }
 
 export default { create, get };

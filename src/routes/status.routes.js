@@ -6,6 +6,6 @@ import statusControllers from "../controllers/status.controllers.js"
 
 const statusRoutes = Router()
 
-statusRoutes.put("/status", schemaValidationMiddleware(schema.user ,"headers", httpStatus.NOT_FOUND), statusControllers.update)
+statusRoutes.post("/status", schemaValidationMiddleware(schema.user ,"headers", httpStatus.NOT_FOUND), statusControllers.update)
 
 export default statusRoutes
