@@ -15,7 +15,7 @@ async function create(req, res, next) {
 
 async function get(req, res, next) {
   const { user } = req.headers;
-  const { limit } = req.query;
+  const limit = Number(req.query.limit);
 
   try {
     const messages = await messagesServices.get(user, limit);

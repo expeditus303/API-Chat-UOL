@@ -25,9 +25,10 @@ async function create({user, to, text, type}){
 }
 
 async function get(user, limit) {
+
+    if(limit) return (await (messagesRepositories.getLimit(user, limit))).reverse()
     
-    const userMessages = await messagesRepositories.get(user)
-    /// stoped here
+    return await messagesRepositories.get(user)
 }
 
-export default { create }
+export default { create, get }
