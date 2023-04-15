@@ -1,7 +1,11 @@
 import db from "../config/database.connection.js";
 
-function create(message){
+function createOne(message){
     return db.messagesCollection.insertOne(message)
+}
+
+function createMany(messages) {
+    return db.messagesCollection.insertMany(messages)
 }
 
 function get(user){
@@ -13,7 +17,8 @@ function getLimit(user, limit){
 }
 
 export default {
-    create, 
+    createOne,
+    createMany, 
     get,
     getLimit
 }

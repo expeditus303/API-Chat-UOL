@@ -4,22 +4,27 @@ function findByName({ name }) {
   return db.participantsCollection.findOne({ name });
 }
 
-async function create(participant, message) {
-    await db.participantsCollection.insertOne(participant)
-    await db.messagesCollection.insertOne(message)
+function create(participant, message) {
+    db.participantsCollection.insertOne(participant)
+    return db.messagesCollection.insertOne(message)
 }
 
 function getAll() {
   return db.participantsCollection.find().toArray()
 }
 
-function findByStatus(query) {
-  return db.participantsCollection.find(query).toArray()
+function findIdle(filter) {
+  return db.participantsCollection.find(filter).toArray()
+}
+
+function deleteIdle(filter){
+  return db.participantsCollection.deleteMany(filter)
 }
 
 export default {
     findByName,
     create,
     getAll,
-    findByStatus
+    findIdle,
+    deleteIdle
 }

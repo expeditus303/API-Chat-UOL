@@ -19,7 +19,7 @@ async function create({user, to, text, type}){
         time: currentTime
     }
 
-    await messagesRepositories.create(message)
+    await messagesRepositories.createOne(message)
 }
 
 async function get(user, limit) {
