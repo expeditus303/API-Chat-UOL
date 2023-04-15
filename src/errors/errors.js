@@ -19,8 +19,16 @@ function notFound(message = "Not Found") {
   }
 }
 
+function unauthorized(message = "Unauthorized") {
+  return {
+    name: "Unauthorized",
+    message
+  }
+}
+
 export default {
   conflict,
   unprocessableContent,
-  notFound
+  notFound,
+  unauthorized
 };

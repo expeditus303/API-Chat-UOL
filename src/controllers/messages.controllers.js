@@ -26,4 +26,17 @@ async function get(req, res, next) {
   }
 }
 
-export default { create, get };
+async function del(req, res, next){
+  const { user } = req.headers
+  const { messageId } = req.params
+
+  try {
+    await messagesServices.del(user, messageId)
+
+    res.sendStatus(200)
+  } catch (err) {
+    next(err)
+  }
+}
+
+export default { create, get, del };

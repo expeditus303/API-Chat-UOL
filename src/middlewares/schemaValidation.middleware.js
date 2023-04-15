@@ -3,9 +3,7 @@ import sanitizeObjectValues from "../utilities/sanatizeData.js";
 
 function validationMiddleware(schema, field = "body", err = httpStatus.UNPROCESSABLE_ENTITY) {
   return (req, res, next) => {
-    console.log(req[field])
     req[field] = sanitizeObjectValues(req[field])
-    console.log(req[field])
     const { error: errorMessages } = schema.validate(req[field], { abortEarly: false });
     if (errorMessages) {
         const errors = errorMessages.details.map((detail) => detail.message)

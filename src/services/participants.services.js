@@ -22,9 +22,6 @@ async function create({ name }) {
         time: formattedTime
     }
 
-    console.log("vamossss")
-    console.log(message)
-
     return await participantsRepositories.create(participant, message)
 
 }

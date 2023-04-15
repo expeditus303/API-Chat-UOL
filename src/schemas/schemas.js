@@ -20,4 +20,8 @@ const limit = joi.object({
   limit: joi.number().positive().optional(),
 });
 
-export default { participant, user, message, limit };
+const params = joi.object({
+  messageId: joi.string().trim().required()
+})
+
+export default { participant, user, message, limit, params };

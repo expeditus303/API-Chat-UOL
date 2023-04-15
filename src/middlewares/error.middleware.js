@@ -16,6 +16,10 @@ function handleAppErrors(err, _req, res, _next) {
       statusCode = httpStatus.NOT_FOUND;
       break;
 
+    case "Unauthorized":
+      statusCode = httpStatus.UNAUTHORIZED;
+      break;
+
     default:
       statusCode = httpStatus.INTERNAL_SERVER_ERROR;
       break;

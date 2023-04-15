@@ -24,10 +24,21 @@ async function create({user, to, text, type}){
 
 async function get(user, limit) {
 
-
     if(limit) return (await (messagesRepositories.getLimit(user, limit))).reverse()
     
     return await messagesRepositories.get(user)
 }
 
-export default { create, get }
+async function del(user, messageId) {
+    const messageIdExists = await messagesRepositories.findById(messageId)
+
+    if(!messageIdExists) throw errors.notFound()
+
+    const userOwnsMessage = await messagesRepositories.findByIdAndUser(user, messageId)
+
+    if(!userOwnsMessage) throw errors.unauthorized()
+
+    return await messagesRepositories.deleteByIdAndUser(user, messageId)
+}
+
+export default { create, get, del }
