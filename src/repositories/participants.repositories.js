@@ -13,8 +13,13 @@ function getAll() {
   return db.participantsCollection.find().toArray()
 }
 
+function findByStatus(query) {
+  return db.participantsCollection.find(query).toArray()
+}
+
 export default {
     findByName,
     create,
-    getAll
+    getAll,
+    findByStatus
 }
