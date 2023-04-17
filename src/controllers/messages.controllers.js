@@ -3,6 +3,7 @@ import messagesServices from "../services/messages.services.js";
 async function create(req, res, next) {
   const { user } = req.headers;
   const { to, text, type } = req.body;
+  console.log(user)
 
   try {
     await messagesServices.create({ user, to, text, type });

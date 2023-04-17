@@ -2,7 +2,6 @@ import participantsServices from "../services/participants.services.js"
 
 async function create(req, res, next){
     const { name } = req.body
-    console.log(name)
 
     try {
         await participantsServices.create({name})
