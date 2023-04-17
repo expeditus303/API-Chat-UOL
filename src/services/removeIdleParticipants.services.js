@@ -8,9 +8,9 @@ async function removeIdleParticipants() {
   const minTimeAllowed = currentTimestamp - maxIdleDurationMs;
   const currentTimeFormated = dayjs(currentTimestamp).format("HH:mm:ss");
   const filter = { lastStatus: { $lt: minTimeAllowed } };
-  console.log("Checking for idle users...")
+  console.log("Checking for idle users...");
   const idleParticipants = await participantsRepositories.findIdle(filter);
-  
+
   if (idleParticipants.length > 0) {
     await participantsRepositories.deleteIdle(filter);
 
@@ -23,12 +23,12 @@ async function removeIdleParticipants() {
     }));
 
     await messagesRepositories.createMany(messages);
-    console.log("Idle users have been removed")
+    console.log("Idle users have been removed");
   }
 }
 
 function removeIdleParticipantsInterval(milliseconds) {
-  return setInterval(removeIdleParticipants, milliseconds)
+  return setInterval(removeIdleParticipants, milliseconds);
 }
 
 export default removeIdleParticipantsInterval;

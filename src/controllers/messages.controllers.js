@@ -3,7 +3,7 @@ import messagesServices from "../services/messages.services.js";
 async function create(req, res, next) {
   const { user } = req.headers;
   const { to, text, type } = req.body;
-  console.log(user)
+  console.log(user);
 
   try {
     await messagesServices.create({ user, to, text, type });
@@ -42,15 +42,15 @@ async function del(req, res, next) {
 
 async function edit(req, res, next) {
   const { user } = req.headers;
-  const { text} = req.body;
+  const { text } = req.body;
   const { messageId } = req.params;
 
   try {
-    await messagesServices.edit(user, text, messageId)
+    await messagesServices.edit(user, text, messageId);
 
-    res.sendStatus(200)
+    res.sendStatus(200);
   } catch (err) {
-    next(err)
+    next(err);
   }
 }
 

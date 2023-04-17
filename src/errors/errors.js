@@ -15,20 +15,20 @@ function unprocessableContent(message = "Unprocessable Content") {
 function notFound(message = "Not Found") {
   return {
     name: "NotFoundError",
-    message
-  }
+    message,
+  };
 }
 
 function unauthorized(message = "Unauthorized") {
   return {
     name: "Unauthorized",
-    message
-  }
+    message,
+  };
 }
 
 export default {
   conflict,
   unprocessableContent,
   notFound,
-  unauthorized
+  unauthorized,
 };

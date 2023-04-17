@@ -5,26 +5,26 @@ function findByName({ name }) {
 }
 
 async function create(participant, message) {
-    await db.participantsCollection.insertOne(participant)
-    return await db.messagesCollection.insertOne(message)
+  await db.participantsCollection.insertOne(participant);
+  return await db.messagesCollection.insertOne(message);
 }
 
 function getAll() {
-  return db.participantsCollection.find().toArray()
+  return db.participantsCollection.find().toArray();
 }
 
 function findIdle(filter) {
-  return db.participantsCollection.find(filter).toArray()
+  return db.participantsCollection.find(filter).toArray();
 }
 
-function deleteIdle(filter){
-  return db.participantsCollection.deleteMany(filter)
+function deleteIdle(filter) {
+  return db.participantsCollection.deleteMany(filter);
 }
 
 export default {
-    findByName,
-    create,
-    getAll,
-    findIdle,
-    deleteIdle
-}
+  findByName,
+  create,
+  getAll,
+  findIdle,
+  deleteIdle,
+};

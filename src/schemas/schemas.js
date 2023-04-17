@@ -21,7 +21,7 @@ const limit = joi.object({
 });
 
 const params = joi.object({
-  messageId: joi.string().trim().required()
-})
+  messageId: joi.string().trim().required(),
+});
 
 export default { participant, user, message, limit, params };

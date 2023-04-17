@@ -7,9 +7,6 @@ import participantsRoutes from "./routes/participants.routes.js";
 import messagesRoutes from "./routes/messages.routes.js";
 import statusRoutes from "./routes/status.routes.js";
 import removeIdleParticipantsInterval from "./services/removeIdleParticipants.services.js";
-import sanitizeData from "./utilities/sanatizeData.js";
-
-
 
 const app = express();
 
