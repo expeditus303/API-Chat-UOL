@@ -22,16 +22,30 @@ async function get(req, res, next) {
 
     return res.status(200).send(messages);
   } catch (err) {
-    next(err)
+    next(err);
   }
 }
 
-async function del(req, res, next){
-  const { user } = req.headers
-  const { messageId } = req.params
+async function del(req, res, next) {
+  const { user } = req.headers;
+  const { messageId } = req.params;
 
   try {
-    await messagesServices.del(user, messageId)
+    await messagesServices.del(user, messageId);
+
+    res.sendStatus(200);
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function edit(req, res, next) {
+  const { user } = req.headers;
+  const { text} = req.body;
+  const { messageId } = req.params;
+
+  try {
+    await messagesServices.edit(user, text, messageId)
 
     res.sendStatus(200)
   } catch (err) {
@@ -39,4 +53,4 @@ async function del(req, res, next){
   }
 }
 
-export default { create, get, del };
+export default { create, get, del, edit };

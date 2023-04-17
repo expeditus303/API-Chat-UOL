@@ -16,12 +16,16 @@ function getLimit(user, limit){
     return db.messagesCollection.find( {$or: [{to: "Todos"}, {to: user}, {from: user}]} ).sort({time: -1}).limit(limit).toArray()
 }
 
-function findById(_id) {
-    return db.messagesCollection.findOne({_id})
+function findById(id) {
+    return db.messagesCollection.findOne({_id: id})
 }
 
-function deleteByIdAndUser(user, _id) {
-    return db.messagesCollection.findOneAndDelete({$and: [{_id}, {from: user}]})
+function del(user, id) {
+    return db.messagesCollection.deleteOne({$and: [{_id: id}, {from: user}]})
+}
+
+function edit(user, id, text){
+    return db.messagesCollection.updateOne({$and: [{_id: id}, {from: user}]}, {$set: {text: text}})
 }
 
 
@@ -31,5 +35,6 @@ export default {
     get,
     getLimit,
     findById,
-    deleteByIdAndUser
+    del,
+    edit
 }

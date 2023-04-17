@@ -31,9 +31,8 @@ async function get(user, limit) {
 }
 
 async function del(user, messageId) {
-    const _id = new ObjectId(messageId)
+    const id = new ObjectId(messageId)
     const messageExists = await messagesRepositories.findById(_id)
-    console.log(messageExists)
 
     if(!messageExists) throw errors.notFound()
 
@@ -41,7 +40,22 @@ async function del(user, messageId) {
 
     if(!userOwnsMessage) throw errors.unauthorized()
 
-    return await messagesRepositories.deleteByIdAndUser(user, _id)
+    return await messagesRepositories.del(user, id)
 }
 
-export default { create, get, del }
+async function edit (user, text, messageId) {
+    const id = new ObjectId(messageId)
+
+    const messageExists = await messagesRepositories.findById(id)
+
+    if(!messageExists) throw errors.notFound()
+
+    const userOwnsMessage =  messageExists.from === user
+
+    if(!userOwnsMessage) throw errors.unauthorized()
+
+    return await messagesRepositories.edit(user, id, text)
+}
+
+
+export default { create, get, del, edit }
