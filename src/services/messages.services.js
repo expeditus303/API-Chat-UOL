@@ -2,6 +2,7 @@ import dayjs from "dayjs"
 import errors from "../errors/errors.js"
 import participantsRepositories from "../repositories/participants.repositories.js"
 import messagesRepositories from "../repositories/messages.repositories.js"
+import { ObjectId } from "mongodb";
 
 async function create({user, to, text, type}){
 
@@ -30,15 +31,17 @@ async function get(user, limit) {
 }
 
 async function del(user, messageId) {
-    const messageIdExists = await messagesRepositories.findById(messageId)
+    const _id = new ObjectId(messageId)
+    const messageExists = await messagesRepositories.findById(_id)
+    console.log(messageExists)
 
-    if(!messageIdExists) throw errors.notFound()
+    if(!messageExists) throw errors.notFound()
 
-    const userOwnsMessage = await messagesRepositories.findByIdAndUser(user, messageId)
+    const userOwnsMessage =  messageExists.from === user
 
     if(!userOwnsMessage) throw errors.unauthorized()
 
-    return await messagesRepositories.deleteByIdAndUser(user, messageId)
+    return await messagesRepositories.deleteByIdAndUser(user, _id)
 }
 
 export default { create, get, del }
