@@ -17,7 +17,7 @@ const message = joi.object({
 });
 
 const limit = joi.object({
-  limit: joi.number().positive().optional(),
+  limit: joi.number().positive().integer().optional(),
 });
 
 const params = joi.object({
