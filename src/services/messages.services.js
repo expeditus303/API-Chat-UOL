@@ -32,7 +32,7 @@ async function get(user, limit) {
 
 async function del(user, messageId) {
     const id = new ObjectId(messageId)
-    const messageExists = await messagesRepositories.findById(_id)
+    const messageExists = await messagesRepositories.findById(id)
 
     if(!messageExists) throw errors.notFound()
 
